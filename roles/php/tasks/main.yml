@@ -1,0 +1,37 @@
+- name: Update apt packages
+  become: yes
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+
+- name: Set timezone to Europe/Paris
+  timezone:
+    name: Europe/Paris
+
+- name: Installation of PHP
+  become: yes
+  apt:
+    state: latest
+    name:
+      - php
+
+- name: Installation of php packages
+  become: yes
+  apt:
+    state: latest
+    name:
+      - php-cli
+      - php-fpm
+      - php-json
+      - php-pdo
+      - php-mysql
+      - php-zip
+      - php-gd
+      - php-mbstring
+      - php-curl
+      - php-xml
+      - php-pear
+      - php-bcmath
+      - php-intl

@@ -1,0 +1,58 @@
+- name: Update apt packages
+  become: yes
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+
+- name: Installation of mariadb
+  become: yes
+  apt:
+    state: latest
+    name:
+      - mariadb-client
+      - mariadb-common
+      - mariadb-server
+      - python3
+      - python3-pip
+      - software-properties-common
+
+- name: Installation of mysql python modules
+  become: yes
+  pip:
+    state: latest
+    name:
+      - PyMySql
+
+- name: Import database
+  become: yes
+  copy:
+    src: ../files/nsapool.sql
+    dest: /root
+
+- name: Ensure mysql service is running
+  systemd:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: Create a new database with name 'nsapool'
+  become: yes
+  mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: nsapool
+    state: present
+
+- name: Create user nsad04 with all privileges
+  become: yes
+  mysql_user:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: nsad04
+    host: localhost
+    priv: "*.*:ALL"
+    password: "{{ mysql_password }}"
+    state: present
+
+- name: Fill database nsapool
+  shell: mysql -u root -p"{{ root_password }}" nsapool < ~/nsapool.sql

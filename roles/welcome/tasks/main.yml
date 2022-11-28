@@ -1,0 +1,4 @@
+- name: Change welcome ssh msg using a file
+  copy:
+    src: ../files/motd
+    dest: /etc/

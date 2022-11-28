@@ -1,0 +1,25 @@
+- name: Update apt packages
+  become: yes
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+    force_apt_get: yes
+
+- name: Installation of apache2
+  become: yes
+  apt:
+    state: latest
+    name:
+      - apache2
+
+- name: Import website project
+  become: yes
+  copy:
+    src: ../files/data.php
+    dest: /var/www/html
+
+- name: Restart Apache
+  service:
+    name: apache2
+    state: restarted

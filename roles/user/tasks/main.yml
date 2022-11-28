@@ -1,0 +1,6 @@
+- name: Creation of marvin user
+  user:
+    name: marvin
+    createhome: yes
+    home: /home/marvin
+    password: "{{ marvin_password | string | password_hash('sha512') }}"
